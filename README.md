@@ -225,9 +225,14 @@ your `viewBox`es accordingly.
   if you have Inkscape installed, via the `-p`/`--pdf` and/or `-P` or `--png`
   command-line options.
   For example: `svgtiler -p map.coffee drawings.xls`
-  will both `drawings_sheet.svg` and `drawings_sheet.pdf`.
+  will create both `drawings_sheet.svg` and `drawings_sheet.pdf`.
   PNG conversion is intended for pixel art; see the
   [Tetris example](examples/tetris/).
+
+* You can convert all text into a LaTeX overlay when exporting to PDF.
+  For example: `svgtiler -p -l map.coffee drawings.xls`
+  will create `drawings_sheet.svg`, `drawings_sheet.pdf`, and
+  `drawings_sheet.pdf_tex`.  See the last file for inclusion instructions.
 
 * You can speed up Inkscape conversions process on a multithreaded CPU via the
   `-j`/`--jobs`
@@ -277,6 +282,7 @@ Optional arguments:
                         Force all symbol tiles to have specified height
   -p / --pdf            Convert output SVG files to PDF via Inkscape
   -P / --png            Convert output SVG files to PNG via Inkscape
+  -l / --latex          Also convert to LaTeX text overlay (use with -p)
   --no-sanitize         Don't sanitize PDF output by blanking out /CreationDate
   -j N / --jobs N       Run up to N Inkscape jobs in parallel
 

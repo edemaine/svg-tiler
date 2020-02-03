@@ -784,7 +784,7 @@ postprocess = (format, filename) ->
   catch e
     console.log "Failed to postprocess '#{filename}': #{e}"
 
-convertSVG = (format, svg, sync) ->
+convertSVG = (format, latex, svg, sync) ->
   child_process = require 'child_process'
   filename = path.parse svg
   if filename.ext == ".#{format}"
@@ -797,6 +797,7 @@ convertSVG = (format, svg, sync) ->
     "--file=#{svg}"
     "--export-#{format}=#{output}"
   ]
+  args.push "--export-latex" if latex
   if sync
     ## In sychronous mode, we let inkscape directly output its error messages,
     ## and add warnings about any failures that occur.
@@ -843,6 +844,7 @@ Optional arguments:
                         Force all symbol tiles to have specified height
   -p / --pdf            Convert output SVG files to PDF via Inkscape
   -P / --png            Convert output SVG files to PNG via Inkscape
+  -l / --latex          Also convert to LaTeX text overlay (use with -p)
   --no-sanitize         Don't sanitize PDF output by blanking out /CreationDate
   -j N / --jobs N       Run up to N Inkscape jobs in parallel
 
@@ -905,6 +907,8 @@ main = ->
         formats.push 'pdf'
       when '-P', '--png'
         formats.push 'png'
+      when '-l', '--latex'
+        latex = true
       when '--no-sanitize'
         sanitize = false
       when '-j', '--jobs'
@@ -925,10 +929,10 @@ main = ->
           filenames = input.writeSVG mappings
           for format in formats
             if typeof filenames == 'string'
-              jobs.push convertSVG format, filenames, sync
+              jobs.push convertSVG format, latex, filenames, sync
             else
               for filename in filenames
-                jobs.push convertSVG format, filename, sync
+                jobs.push convertSVG format, latex, filename, sync
   unless files
     console.log 'Not enough filename arguments'
     help()
